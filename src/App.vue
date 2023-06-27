@@ -16,7 +16,12 @@ export default {
     TheHeader,
   },
   methods: {
-    ...mapActions(["fetchBooks", "fetchAuthors", "fetchBorrowings"]),
+    ...mapActions([
+      "fetchBooks",
+      "fetchAuthors",
+      "fetchBorrowings",
+      "fetchClients",
+    ]),
     // ...mapGetters(["book"]),
     // book() {
     //   return this.book(10046);
@@ -26,6 +31,7 @@ export default {
     await this.fetchBooks();
     await this.fetchAuthors();
     await this.fetchBorrowings();
+    await this.fetchClients();
   },
 };
 </script>
@@ -127,7 +133,7 @@ p {
 }
 button {
   font-family: "Montserrat";
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12px;
   color: var(--background-color-2);
   border: transparent;

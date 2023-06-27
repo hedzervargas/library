@@ -18,14 +18,12 @@
           <div class="book-attribute">nationality</div>
           <div class="book-attribute">books</div>
         </tr>
-        <tr
-          v-for="author in filteredAuthors"
-          :key="author.author_id"
-          class="single-book"
-        >
-          <p class="book-attribute">{{ author.name }}</p>
-          <p class="book-attribute">{{ author.nationality }}</p>
-          <p class="book-attribute">{{ author.books.length }}</p>
+        <tr v-for="author in filteredAuthors" :key="author.author_id">
+          <router-link :to="`/authors/${author.author_id}`" class="single-book">
+            <p class="book-attribute">{{ author.name }}</p>
+            <p class="book-attribute">{{ author.nationality }}</p>
+            <p class="book-attribute">{{ author.books.length }}</p>
+          </router-link>
         </tr>
       </table>
     </div>
@@ -70,15 +68,19 @@ export default {
     },
   },
   methods: {},
-  // created(){
-  //   this.
-  // }
 };
 </script>
 
 <style scoped>
 .content {
   margin: 3rem;
+  max-width: var(--max-width);
+}
+
+@media screen and (min-width: 1200px) {
+  .content {
+    margin: 3rem auto 3rem auto;
+  }
 }
 
 form {
@@ -89,8 +91,29 @@ form {
 table {
   width: 100%;
 }
+
+table tr {
+  border-style: none none solid none;
+  border-width: 1px;
+  border-color: #ececec;
+}
+
+.single-book {
+  border-style: none none solid none;
+  border-width: 1px;
+  border-color: #ececec;
+}
+
 .search-input {
   height: 40px;
+  height: 40px;
+  width: 15rem;
+  border: none;
+  background: var(--background-color-2);
+  padding: 1em 1rem;
+  border-radius: var(--border-radius);
+  resize: none;
+  margin-bottom: 1rem;
 }
 
 .filtering {

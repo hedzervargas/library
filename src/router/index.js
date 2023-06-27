@@ -2,10 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import BooksList from "../pages/BooksList.vue";
 import AuthorsList from "../pages/AuthorsList.vue";
 import BookDetails from "../pages/BookDetails.vue";
-import MyBorrowings from "../pages/MyBorrowings";
+import BorrowingsList from "../pages/BorrowingsList.vue";
+import ClientsList from "../pages/ClientsList.vue";
 
 // import BookDetails from "../pages/BookDetails.vue";
-// import AuthorDetails from "../pages/AuthorDetails.vue";
+import AuthorDetails from "../pages/AuthorDetails.vue";
+import AddBook from "../pages/AddBook.vue";
 // import BorrowingsList from "../pages/BorrowingsList.vue";
 // import ClientsList from "../pages/ClientsList.vue";
 // import ClientDetails from "../pages/ClientDetails.vue";
@@ -33,15 +35,25 @@ const routes = [
     // component: null,
   },
   {
-    path: "/authors/:id",
-    name: "author_details",
-    // component: AuthorDetails,
-    component: null,
+    path: "/books/add",
+    name: "add_book",
+    component: AddBook,
   },
   {
-    path: "/my_borrowings",
+    path: "/authors/:id",
+    name: "author_details",
+    component: AuthorDetails,
+    props: true,
+  },
+  {
+    path: "/borrowings",
     name: "borrowings_list",
-    component: MyBorrowings,
+    component: BorrowingsList,
+  },
+  {
+    path: "/clients",
+    name: "clients_list",
+    component: ClientsList,
   },
   // {
   //   path: '/about',

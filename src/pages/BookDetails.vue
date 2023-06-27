@@ -1,23 +1,24 @@
 <template>
   <div class="content">
     <div class="container">
+      <h1>{{ book.title }}</h1>
       <table v-if="book && book.length != 0">
         <tr class="book-attributes">
-          <p class="book-attribute">title</p>
+          <!-- <p class="book-attribute">title</p> -->
           <p class="book-attribute">author(s)</p>
           <p class="book-attribute">publication date</p>
           <p class="book-attribute">publisher</p>
           <p class="book-attribute">genre</p>
           <p class="book-attribute">edition(s)</p>
-          <p class="book-attribute">available copies</p>
+          <p class="book-attribute">copies</p>
         </tr>
         <tr class="single-book">
-          <p class="book-attribute">{{ book.title }}</p>
+          <!-- <p class="book-attribute">{{ book.title }}</p> -->
           <p class="book-attribute">{{ book.authors.join(", ") }}</p>
           <p class="book-attribute">{{ book.publication_date }}</p>
           <p class="book-attribute">{{ book.publisher }}</p>
           <p class="book-attribute">{{ book.genre }}</p>
-          <!-- <p class="book-attribute">{{ book.editions.join(", ") }}</p> -->
+          <p class="book-attribute">{{ book.editions.join(", ") }}</p>
           <p class="book-attribute">{{ book.copies }}</p>
         </tr>
       </table>
@@ -32,24 +33,19 @@ export default {
   data() {
     return {
       searchInput: "",
-      // book: {
-      //   id: 10001,
-      //   title: "1984",
-      //   authors: ["George Orwell"],
-      //   publicationDate: "2021",
-      //   publisher: "Animal Farm",
-      //   genre: "Science Fiction, Dystopian",
-      //   editions: ["First Edition", "Second Edition"],
-      //   copies: 3,
-      // },
+      book: {},
     };
   },
-  computed: {
-    book() {
-      return this.$store.getters.book(this.id);
-    },
-  },
+  computed: {},
   methods: {},
+  created() {
+    const books = this.$store.getters.books;
+    const book = books.find((book) => {
+      return book.book_id == this.id;
+    });
+    // const book = this.$store.getters.book(this.id);
+    this.book = book;
+  },
 };
 </script>
 

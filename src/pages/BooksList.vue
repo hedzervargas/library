@@ -1,16 +1,18 @@
 <template>
   <div class="content">
     <h1>Books</h1>
-    <form @submit.prevent="">
-      <div class="search-bar">
-        <input
-          v-model="searchInput"
-          class="search-input"
-          type="text"
-          placeholder="Search by title..."
-        />
-      </div>
-    </form>
+    <div class="header">
+      <form @submit.prevent="">
+        <div class="search-bar">
+          <input
+            v-model="searchInput"
+            class="search-input"
+            type="text"
+            placeholder="Search by title..."
+          />
+        </div>
+      </form>
+    </div>
     <div class="container">
       <table v-if="books && books.length > 0">
         <tr class="book-attributes">
@@ -59,8 +61,14 @@ export default {
 <style scoped>
 .content {
   margin: 3rem;
+  max-width: var(--max-width);
 }
 
+@media screen and (min-width: 1200px) {
+  .content {
+    margin: 3rem auto 3rem auto;
+  }
+}
 form {
   display: flex;
   align-items: center;
@@ -77,8 +85,21 @@ table tr {
   border-color: #ececec;
 }
 
+.single-book {
+  border-style: none none solid none;
+  border-width: 1px;
+  border-color: #ececec;
+}
+
 .search-input {
   height: 40px;
+  width: 15rem;
+  border: none;
+  background: var(--background-color-2);
+  padding: 1em 1rem;
+  border-radius: var(--border-radius);
+  resize: none;
+  margin-bottom: 1rem;
 }
 
 .filtering {

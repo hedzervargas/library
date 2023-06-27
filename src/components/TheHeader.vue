@@ -9,7 +9,8 @@
           <ul>
             <li><RouterLink to="/books">Books</RouterLink></li>
             <li><RouterLink to="/authors">Authors</RouterLink></li>
-            <li><RouterLink to="/my_borrowings">My borrowings</RouterLink></li>
+            <li><RouterLink to="/clients">Clients</RouterLink></li>
+            <li><RouterLink to="/borrowings">Borrowings</RouterLink></li>
           </ul>
         </li>
         <li>
