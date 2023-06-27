@@ -8,6 +8,7 @@ import ClientsList from "../pages/ClientsList.vue";
 // import BookDetails from "../pages/BookDetails.vue";
 import AuthorDetails from "../pages/AuthorDetails.vue";
 import AddBook from "../pages/AddBook.vue";
+import AddBorrowing from "../pages/AddBorrowing.vue";
 // import BorrowingsList from "../pages/BorrowingsList.vue";
 // import ClientsList from "../pages/ClientsList.vue";
 // import ClientDetails from "../pages/ClientDetails.vue";
@@ -49,6 +50,11 @@ const routes = [
     path: "/borrowings",
     name: "borrowings_list",
     component: BorrowingsList,
+  },
+  {
+    path: "/borrowings/add",
+    name: "add_borrowing",
+    component: AddBorrowing,
   },
   {
     path: "/clients",

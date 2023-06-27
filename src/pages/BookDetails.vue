@@ -52,6 +52,13 @@ export default {
 <style scoped>
 .content {
   margin: 3rem;
+  max-width: var(--max-width);
+}
+
+@media screen and (min-width: 1200px) {
+  .content {
+    margin: 3rem auto 3rem auto;
+  }
 }
 
 form {

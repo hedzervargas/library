@@ -21,6 +21,7 @@ export default {
       "fetchAuthors",
       "fetchBorrowings",
       "fetchClients",
+      "fetchAvailableCopies",
     ]),
     // ...mapGetters(["book"]),
     // book() {
@@ -32,6 +33,7 @@ export default {
     await this.fetchAuthors();
     await this.fetchBorrowings();
     await this.fetchClients();
+    await this.fetchAvailableCopies();
   },
 };
 </script>
@@ -74,7 +76,7 @@ body {
   --border-radius: 0.5rem;
   --letter-spacing: 1px;
   --transition: 0.3s ease-in-out all;
-  --max-width: 1120px;
+  --max-width: 1320px;
   --fixed-width: 600px;
 
   /* box shadow*/

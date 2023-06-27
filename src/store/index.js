@@ -7,7 +7,7 @@ export default createStore({
     books: [],
     borrowings: [],
     clients: [],
-    copies: [],
+    availableCopies: [],
     publishers: [],
     returns: [],
   },
@@ -22,8 +22,7 @@ export default createStore({
     // },
     borrowings: (state) => state.borrowings,
     clients: (state) => state.clients,
-    userId: (state) => state.userId,
-    userIsEmployee: (state) => state.userIsEmployee,
+    availableCopies: (state) => state.availableCopies,
   },
   mutations: {
     setBooks(state, books) {
@@ -41,11 +40,8 @@ export default createStore({
     setClients(state, clients) {
       state.clients = clients;
     },
-    extendBorrowing(state, id) {
-      const borrowingToUpdate = state.borrowings.find(
-        (borrowing) => borrowing.borrowing_id == id
-      );
-      borrowingToUpdate.is_extended = "y";
+    setAvailableCopies(state, copies) {
+      state.availableCopies = copies;
     },
   },
   actions: {
@@ -79,6 +75,46 @@ export default createStore({
         const response = await axios.get("http://127.0.0.1:8000/clients");
         // console.log(response.data);
         commit("setClients", response.data);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    },
+    async fetchAvailableCopies({ commit }) {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/available_copies"
+        );
+        // console.log(response.data);
+        commit("setAvailableCopies", response.data);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    },
+    async extendBorrowing({ commit }, borrowingId) {
+      try {
+        const response = await axios.patch(
+          `http://127.0.0.1:8000/borrowings/${borrowingId}`,
+          borrowingId
+        );
+        // console.log(response.data);
+        dispatch("fetchBorrowings");
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    },
+    async addBorrowing({ commit, dispatch }, borrowingInfo) {
+      const highestBorrowingId = Math.max(
+        ...this.state.borrowings.map((borrowing) => borrowing.borrowing_id)
+      );
+      const borrowingId = highestBorrowingId + 1;
+      borrowingInfo.borrowing_id = borrowingId;
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/borrowings",
+          borrowingInfo
+        );
+        // console.log(response.data);
+        dispatch("fetchBorrowings");
       } catch (error) {
         console.error("Error fetching books:", error);
       }

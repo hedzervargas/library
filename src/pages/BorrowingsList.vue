@@ -1,9 +1,14 @@
 <template>
   <div class="content">
     <div class="header">
-      <h1>Borrowings</h1>
-      <button v-if="showOverdue" @click="toggleOverdue">Overdue</button>
-      <button v-else @click="toggleOverdue" class="bggrey">Overdue</button>
+      <div class="header2">
+        <h1>Borrowings</h1>
+        <button v-if="showOverdue" @click="toggleOverdue">Overdue</button>
+        <button v-else @click="toggleOverdue" class="bggrey">Overdue</button>
+      </div>
+      <RouterLink to="/borrowings/add">
+        <button>Add</button>
+      </RouterLink>
     </div>
     <div class="container">
       <table>
@@ -53,7 +58,7 @@
               @click="extendBorrowing(borrowing.borrowing_id)"
               class="extend-button"
             >
-              extend
+              Extend
             </button>
           </p>
         </tr>
@@ -63,6 +68,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import axios from "axios";
 export default {
   data() {
@@ -84,17 +90,27 @@ export default {
     },
   },
   methods: {
-    extendBorrowing(id) {
+    ...mapActions([
+      "fetchBooks",
+      "fetchAuthors",
+      "fetchBorrowings",
+      "fetchClients",
+      "fetchAvailableCopies",
+    ]),
+    async extendBorrowing(id) {
       console.log(id);
-      // axios
-      //   .post("http://127.0.0.1:8000/extended-borrowing", { id })
-      //   .then((response) => {
-      //     console.log("Data sent successfully", response);
-      //     this.$store.commit("extendBorrowing", id);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error sending data", error);
-      //   });
+      try {
+        const response = await axios.patch(
+          `http://127.0.0.1:8000/borrowings/${id}`,
+          {
+            borrowing_id: id,
+            is_extended: "y",
+          }
+        );
+        console.log(response.data); // Optional: Handle the response if needed
+      } catch (error) {
+        console.error(error);
+      }
     },
     toggleOverdue() {
       if (this.showOverdue) {
@@ -104,7 +120,8 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
+    // await this.fetchBorrowings();
     this.borrowings = this.$store.getters.borrowings;
   },
 };
@@ -116,12 +133,6 @@ export default {
   max-width: var(--max-width);
 }
 
-@media screen and (min-width: 1200px) {
-  .content {
-    margin: 3rem auto 3rem auto;
-  }
-}
-
 form {
   display: flex;
   align-items: center;
@@ -130,24 +141,29 @@ form {
 
 .header {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.header2 {
+  display: flex;
+  align-items: center;
   width: 20rem;
 }
-.header button {
+button {
   margin-left: 3rem;
   width: 5.5rem;
-  height: 2rem;
+  /* height: 1.85rem; */
   /* font-size: 0.75rem; */
-  padding: 0.3rem;
+  padding: 0.3rem 0.5rem 0.3rem 0.5rem;
   /* background-color: grey; */
   font-weight: 400;
 }
-
+h1 {
+  margin-bottom: 0;
+}
 .bggrey {
   background-color: gray;
-}
-
-.header button .active {
-  background-color: var(--primary-color);
 }
 
 table {
@@ -169,21 +185,11 @@ table tr {
   border-radius: 15px;
 }
 
-.filtering button {
-  height: 40px;
-  border-radius: 0;
-  background: var(--quaternary-color);
-}
-
 .filtering :first-child {
   border-radius: 0.5rem 0 0 0.5rem;
 }
 .filtering :last-child {
   border-radius: 0 0.5rem 0.5rem 0;
-}
-.filtering button:hover,
-.filtering .active {
-  background: var(--primary-color);
 }
 
 table {
@@ -201,15 +207,23 @@ table {
   display: flex;
   justify-content: space-between;
 }
-
 .extend-button {
-  height: 3.25rem;
+  height: 1.75rem;
 }
-/* .return-button {
-  height: auto;
-  padding: auto;
-  margin: auto;
-
-} */
-/* .boo; */
+@media screen and (min-width: 1200px) {
+  .content {
+    margin: 3rem auto 3rem auto;
+  }
+  button {
+    width: 10rem;
+  }
+  .extend-button {
+    height: 2.5rem;
+    margin-left: 0;
+  }
+  p {
+    /* margin-left: 0; */
+    margin: 1rem 0;
+  }
+}
 </style>

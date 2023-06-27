@@ -1,90 +1,76 @@
 <template>
-  <div class="content">
+  <section>
     <header>
-      <h1>Add a book</h1>
+      <h1>Add a borrowing</h1>
     </header>
-    <form @submit.prevent="postListing">
+    <form @submit.prevent="postBorrowing">
       <div class="form-input">
-        <label for="title">Title*</label>
-        <input
-          type="text"
-          id="title"
-          placeholder="Enter the book title"
-          v-model="bookInfo.title"
-        />
+        <label for="client_id">Client ID*</label>
+        <select
+          id="client_id"
+          name="client_id"
+          :class="{ 'filled-in': clientFilledIn }"
+          @input="setClientId"
+        >
+          <option value="select" selected disabled>Select</option>
+          <option v-for="id in client_ids" :key="id" :value="id">
+            {{ id }}
+          </option>
+        </select>
       </div>
       <div class="form-input">
-        <label for="author">Author*</label>
-        <input
-          type="text"
-          id="author"
-          placeholder="Enter the name of the author"
-          v-model="bookInfo.author"
-        />
-      </div>
-      <div class="form-input">
-        <label for="publisher">Publisher*</label>
-        <input
-          type="text"
-          id="publisher"
-          placeholder="Enter the name of the publisher"
-          v-model="bookInfo.publisher"
-        />
-      </div>
-      <div class="form-input">
-        <label for="genre">Genre*</label>
-        <input
-          type="text"
-          id="genre"
-          placeholder="Enter the Genre"
-          v-model="bookInfo.genre"
-        />
-      </div>
-      <div class="form-input">
-        <label for="publication_date">Publication Date*</label>
-        <input
-          type="text"
-          id="publication_date"
-          placeholder="e.g. 5th century"
-          v-model="bookInfo.publication_date"
-        />
+        <label for="copy_id">Copy ID*</label>
+        <select
+          id="copy_id"
+          name="copy_id"
+          :class="{ 'filled-in': copyFilledIn }"
+          @input="setCopyId"
+        >
+          <option value="select" selected disabled>Select</option>
+          <option v-for="id in copy_ids" :key="id" :value="id">{{ id }}</option>
+        </select>
       </div>
       <p v-if="!formIsValid" class="invalid-message">Required fields missing</p>
       <button type="submit">ADD</button>
     </form>
-  </div>
+  </section>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: ["houseId"],
   data() {
     return {
-      bookInfo: {
-        title: "",
-        author: "",
-        publisher: "",
-        genre: "",
-        publication_date: "",
+      borrowingInfo: {
+        client_id: null,
+        copy_id: null,
       },
-      pictureURL: "",
       formIsValid: true,
-      isEditing: false,
-      changesUnsaved: false,
-      unsavedWarning: false,
       error: null,
-      mounted: false,
+      client_ids: [],
+      copy_ids: [],
+      clientFilledIn: false,
+      copyFilledIn: false,
     };
   },
   methods: {
-    async postListing() {
+    ...mapActions([
+      "fetchBooks",
+      "fetchAuthors",
+      "fetchBorrowings",
+      "fetchClients",
+      "fetchAvailableCopies",
+    ]),
+    async postBorrowing() {
       // checking form validity
       this.validateForm();
 
       if (this.formIsValid) {
         try {
-          await this.$store.dispatch("addBook", this.bookInfo);
-          this.$router.push(`/books`);
+          await this.$store.dispatch("addBorrowing", this.borrowingInfo);
+          this.$router.push(`/borrowings`);
         } catch (error) {
           this.error = error.message || "Something went wrong!";
         }
@@ -93,7 +79,9 @@ export default {
     validateForm() {
       // validating form
       if (
-        Object.keys(this.bookInfo).every((key) => this.bookInfo[key] !== "")
+        Object.keys(this.borrowingInfo).every(
+          (key) => this.bookInfo[key] != null
+        )
       ) {
         this.formIsValid = true;
       } else {
@@ -103,20 +91,34 @@ export default {
     invalidateForm() {
       // invalidating form
     },
+    setClientId(event) {
+      this.clientFilledIn = true;
+      this.borrowingInfo.client_id = event.target.value;
+    },
+    setCopyId(event) {
+      this.copyFilledIn = true;
+      this.borrowingInfo.copy_id = event.target.value;
+    },
+  },
+  async created() {
+    await this.fetchBooks();
+    await this.fetchAuthors();
+    await this.fetchBorrowings();
+    await this.fetchClients();
+    await this.fetchAvailableCopies();
+    this.client_ids = this.$store.getters.clients.map(
+      (client) => client.client_id
+    );
+    this.copy_ids = this.$store.getters.availableCopies;
+    console.log(this.client_ids);
+    console.log(this.copy_ids);
   },
 };
 </script>
 
 <style scoped>
-.content {
-  margin: 3rem;
-  max-width: var(--max-width);
-}
-
-@media screen and (min-width: 1200px) {
-  .content {
-    margin: 3rem auto 3rem auto;
-  }
+section {
+  max-width: 30rem;
 }
 header {
   display: flex;
@@ -133,10 +135,9 @@ header {
   left: 0;
 }
 h1 {
-  margin-right: 50%;
   margin-bottom: 0;
-  transform: translateX(50%);
   white-space: nowrap;
+  text-align: center;
 }
 form {
   width: 100%;
@@ -235,5 +236,36 @@ button {
 .invalid-message {
   font-style: italic;
   color: red;
+}
+
+/* dialog styles */
+h1.dialog,
+p.dialog {
+  text-align: center;
+}
+h1.dialog {
+  margin-bottom: 1rem;
+}
+p.dialog {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+button.dialog {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+button.dialog.flat {
+  background: var(--secondary-color);
+}
+@media screen and (min-width: 1000px) {
+  form {
+    margin-top: 3rem;
+  }
+  form select {
+    height: 46px;
+  }
+  section {
+    margin-top: 5rem;
+  }
 }
 </style>

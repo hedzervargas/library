@@ -87,7 +87,9 @@ form {
 
 .header {
   display: flex;
+  align-items: center;
   width: 20rem;
+  margin-bottom: 2rem;
 }
 
 .header button {
@@ -166,4 +168,7 @@ table {
   
 } */
 /* .boo; */
+h1 {
+  margin-bottom: 0;
+}
 </style>
