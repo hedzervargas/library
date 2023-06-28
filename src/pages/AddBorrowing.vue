@@ -80,7 +80,7 @@ export default {
       // validating form
       if (
         Object.keys(this.borrowingInfo).every(
-          (key) => this.bookInfo[key] != null
+          (key) => this.borrowingInfo[key] != null
         )
       ) {
         this.formIsValid = true;
@@ -110,8 +110,6 @@ export default {
       (client) => client.client_id
     );
     this.copy_ids = this.$store.getters.availableCopies;
-    console.log(this.client_ids);
-    console.log(this.copy_ids);
   },
 };
 </script>

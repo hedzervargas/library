@@ -90,19 +90,20 @@ export default createStore({
         console.error("Error fetching books:", error);
       }
     },
-    async extendBorrowing({ commit }, borrowingId) {
+    async extendBorrowing({ dispatch }, borrowingId) {
       try {
         const response = await axios.patch(
           `http://127.0.0.1:8000/borrowings/${borrowingId}`,
-          borrowingId
+          { is_extended: "y" }
         );
-        // console.log(response.data);
+        console.log(response.data);
         dispatch("fetchBorrowings");
       } catch (error) {
         console.error("Error fetching books:", error);
       }
     },
     async addBorrowing({ commit, dispatch }, borrowingInfo) {
+      console.log(borrowingInfo);
       const highestBorrowingId = Math.max(
         ...this.state.borrowings.map((borrowing) => borrowing.borrowing_id)
       );

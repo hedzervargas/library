@@ -100,11 +100,10 @@ export default {
     async extendBorrowing(id) {
       console.log(id);
       try {
-        const response = await axios.patch(
+        const response = await axios.put(
           `http://127.0.0.1:8000/borrowings/${id}`,
           {
             borrowing_id: id,
-            is_extended: "y",
           }
         );
         console.log(response.data); // Optional: Handle the response if needed
